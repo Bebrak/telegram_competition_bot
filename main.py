@@ -106,13 +106,24 @@ def list_of_commands(message):
                                       '\n● /yourcity - искать центр It-Куб в вашем городе.'
                                       '\n● /itcube - узнать больше о It-Куб.'
                                       '\n● /author - узнать больше о боте.', reply_markup=markup, parse_mode='html')
+@bot.message_handler(commands=['list_of_commandsstart'])
+def list_of_commandsstart(message):
+    markup = types.InlineKeyboardMarkup(row_width=1)
+    item1 = types.InlineKeyboardButton('⛔ Назад ⛔', callback_data='menu')
+    markup.add(item1)
+    bot.send_message(message.chat.id,'<b>Список команд</b>'
+                                      '\n● /menustart - перейти в меню.'
+                                      '\n● /start - перейти на приветственный экран.'
+                                      '\n● /yourcity - искать центр It-Куб в вашем городе.'
+                                      '\n● /itcube - узнать больше о It-Куб.'
+                                      '\n● /author - узнать больше о боте.', reply_markup=markup, parse_mode='html')
 @bot.message_handler(content_types=['text'])
 def text_message(message):
     if message.chat.type == 'private':
         if message.text == 'Меню':
             menustart(message)
         elif message.text == 'Список команд':
-            list_of_commands(message)
+            list_of_commandsstart(message)
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_inline(call):
@@ -120,6 +131,8 @@ def callback_inline(call):
         if call.message:
             if call.data == 'list_of_commands':
                 list_of_commands(call.message)
+            if call.data == 'list_of_commandsstart':
+                list_of_commandsstart(call.message)
             elif call.data == 'menu':
                 menu(call.message)
             elif call.data == 'itcube':
